@@ -1,10 +1,13 @@
-# Smart Backspace for Neovim
+<h1 align="center">✨ Smart Backspace for Neovim</h1>
 
 _Neovim plugin to save time removing indentation. Inspired by [Intellij](https://www.jetbrains.com/idea/)'s backspace functionality_
 
 ## 🚀 Demo
 
 **Coming soon!**
+
+
+
 
 ## 📦 Installation
 
@@ -15,7 +18,7 @@ _Neovim plugin to save time removing indentation. Inspired by [Intellij](https:/
 
 - Neovim 0.5.0 or higher
 
-### For [lazy.nvim](https://lazy.folke.io) users
+### For [lazy.nvim](https://lazy.folke.io) users:
 
 ```lua
 {
@@ -27,7 +30,7 @@ _Neovim plugin to save time removing indentation. Inspired by [Intellij](https:/
 }
 ```
 
-### For [vim-plug](https://github.com/junegunn/vim-plug) users
+### For [vim-plug](https://github.com/junegunn/vim-plug) users:
 
 ```vim
 Plug "qwavies/smart-backspace.nvim"
@@ -37,7 +40,7 @@ require("smart-backspace").setup()
 EOF
 ```
 
-### For [packer](https://github.com/wbthomason/packer.nvim)
+### For [packer](https://github.com/wbthomason/packer.nvim) users:
 
 ```lua
 use {
