@@ -1,4 +1,4 @@
-<h1 align="center">✨ Smart Backspace for Neovim</h1>
+<h1 align="center">✨ Smart Backspace for Neovim ✨</h1>
 
 <p align="center">Neovim plugin to save time removing indentation. Inspired by <a href="https://www.jetbrains.com/idea/">Intellij</a>'s backspace functionality</p>
 
@@ -8,12 +8,12 @@
 
 ## 📦 Installation
 
-> [!CAUTION]
-> If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `opts`, ensure that `map_bs = false`.
-
 ### Requirements
 
 - Neovim 0.5.0 or higher
+
+> [!WARNING]
+> If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `opts`, ensure that `map_bs = false`.
 
 ### For [lazy.nvim](https://lazy.folke.io) users:
 
