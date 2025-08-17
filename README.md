@@ -55,7 +55,7 @@ use {
 
 ## 👨‍💻 Planned Changes/Additions
 
--[ ] A `:SmartBackspaceToggle` command
--[ ] True compatibility with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), or act as an alternative
--[ ] Using `<S-BS>` to use as a regular backspace
--[ ] User configuration for more flexibility
+- [ ] A `:SmartBackspaceToggle` command
+- [ ] True compatibility with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), or act as an alternative
+- [ ] Using `<S-BS>` to use as a regular backspace
+- [ ] User configuration for more flexibility
