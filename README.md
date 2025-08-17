@@ -8,7 +8,7 @@ _Neovim plugin to save time removing indentation. Inspired by [Intellij](https:/
 
 ## 📦 Installation
 
-> [!WARN]
+> [!CAUTION]
 > If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `opts`, ensure that `map_bs = false`.
 
 ### Requirements
