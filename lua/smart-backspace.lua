@@ -49,7 +49,8 @@ M.setup = function(opts)
 
    vim.keymap.set("i", "<BS>", smart_backspace, { desc = "Smart backspace" })
    
-   vim.keymap.set("i", "<leader><BS>", function()
+   -- default back to regular backspace functionality with ctrl+backspace
+   vim.keymap.set("i", "<C-BS>", function()
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
    end, {desc = "Simple backspace"})
 end
