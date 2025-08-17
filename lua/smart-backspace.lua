@@ -44,8 +44,14 @@ local function smart_backspace()
    end
 end
 
-M.setup = function()
+M.setup = function(opts)
+   opts = opts or {}
+
    vim.keymap.set("i", "<BS>", smart_backspace, { desc = "Smart backspace" })
+   
+   vim.keymap.set("i", "<leader><BS>", function()
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
+   end, {desc = "Simple backspace"})
 end
 
 return M
