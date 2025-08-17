@@ -27,6 +27,18 @@
 }
 ```
 
+### For [packer.nvim](https://github.com/wbthomason/packer.nvim) users:
+
+```lua
+use {
+    "qwavies/smart-backspace.nvim",
+        event = "InsertEnter",
+        config = function()
+            require("smart-backspace").setup()
+            end
+}
+```
+
 ### For [vim-plug](https://github.com/junegunn/vim-plug) users:
 
 ```vim
@@ -35,18 +47,6 @@ Plug "qwavies/smart-backspace.nvim"
 lua << EOF
 require("smart-backspace").setup()
 EOF
-```
-
-### For [packer](https://github.com/wbthomason/packer.nvim) users:
-
-```lua
-use {
-    "qwavies/smart-backspace.nvim",
-    event = "InsertEnter",
-    config = function()
-        require("smart-backspace").setup()
-    end
-}
 ```
 
 ## ⚙  Configuration
