@@ -32,10 +32,10 @@
 ```lua
 use {
     "qwavies/smart-backspace.nvim",
-        event = "InsertEnter",
-        config = function()
-            require("smart-backspace").setup()
-        end
+    event = "InsertEnter",
+    config = function()
+        require("smart-backspace").setup()
+    end
 }
 ```
 
