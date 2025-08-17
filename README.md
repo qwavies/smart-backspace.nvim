@@ -35,7 +35,7 @@ use {
         event = "InsertEnter",
         config = function()
             require("smart-backspace").setup()
-            end
+        end
 }
 ```
 
