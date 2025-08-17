@@ -1,13 +1,10 @@
 <h1 align="center">✨ Smart Backspace for Neovim</h1>
 
-_Neovim plugin to save time removing indentation. Inspired by [Intellij](https://www.jetbrains.com/idea/)'s backspace functionality_
+<p align="center">Neovim plugin to save time removing indentation. Inspired by <a href="https://www.jetbrains.com/idea/">Intellij</a>'s backspace functionality</p>
 
 ## 🚀 Demo
 
 **Coming soon!**
-
-
-
 
 ## 📦 Installation
 
