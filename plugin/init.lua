@@ -1,1 +1,0 @@
-require("smart-backspace").setup()

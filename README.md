@@ -37,10 +37,6 @@ use {
 
 ```vim
 Plug "qwavies/smart-backspace.nvim"
-
-lua << EOF
-require("smart-backspace").setup()
-EOF
 ```
 
 ## ⚙  Configuration

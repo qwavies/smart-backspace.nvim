@@ -30,7 +30,7 @@ local function remove_whitespace(cursor_pos, current_line)
    end
 end
 
-local function smart_backspace()
+function M.smart_backspace()
    local current_line = vim.api.nvim_get_current_line()
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
 
@@ -44,15 +44,8 @@ local function smart_backspace()
    end
 end
 
-M.setup = function(opts)
-   opts = opts or {}
-
-   vim.keymap.set("i", "<BS>", smart_backspace, { desc = "Smart backspace" })
-   
-   -- default back to regular backspace functionality with ctrl+backspace
-   vim.keymap.set("i", "<C-BS>", function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
-   end, {desc = "Simple backspace"})
+function M.regular_backspace()
+   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
 end
 
 return M
