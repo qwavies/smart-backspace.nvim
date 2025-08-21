@@ -15,12 +15,12 @@ local function remove_whitespace(cursor_pos, current_line)
    local after_cursor = current_line:sub(col + 1)
 
    local prev_line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
-   local new_line = prev_line .. after_cursor
 
    if (row > 0) and (contains_only_whitespace(prev_line)) then
       -- edge case where line above is empty
       vim.api.nvim_buf_set_lines(0, row - 1, row, false, {}) -- simply remove above line
    elseif (row > 0) then
+      local new_line = prev_line .. after_cursor
       vim.api.nvim_buf_set_lines(0, row - 1, row + 1, false, {new_line}) -- replace both lines w new_line
       vim.api.nvim_win_set_cursor(0, {row, #prev_line}) -- set cursor at end of previous line content
    else
