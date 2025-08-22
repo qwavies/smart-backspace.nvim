@@ -10,7 +10,7 @@
 
 ### 📋 Requirements
 
-- Neovim 0.5.0 or higher
+- Neovim 0.8.0 or higher
 
 > [!WARNING]
 > If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `opts`, ensure that `map_bs = false`.
