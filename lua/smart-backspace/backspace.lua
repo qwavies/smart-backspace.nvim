@@ -1,5 +1,26 @@
 local M = {}
 
+local function regular_backspace(cursor_pos, current_line)
+   -- TODO: add functionality to remove by indent
+   local row = cursor_pos[1]
+   local col = cursor_pos[2]
+
+   if (col > 0) then
+      -- delete character before
+      local new_line = current_line:sub(1, col - 1) .. current_line:sub(col + 1)
+      vim.api.nvim_set_current_line(new_line)
+      vim.api.nvim_win_set_cursor(0, {row, col - 1})
+
+   elseif (row > 1) then
+      -- at start of line, join with previous line
+      local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
+      local new_line = prev_line .. current_line
+      vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line})
+      vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line})
+   end
+   -- edge case: on line 1 first character, do nothing
+end
+
 local function contains_only_whitespace(str)
    for char in str:gmatch(".") do
       if char ~= " " and char ~= "\t" then
@@ -62,13 +83,19 @@ end
 function M.smart_backspace()
    local current_line = vim.api.nvim_get_current_line()
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
-
    local behind_cursor = current_line:sub(1, cursor_pos[2])
 
-   if contains_only_whitespace(behind_cursor) then
+   local recording_macro = (vim.fn.reg_recording() ~= "")
+   local executing_macro = (vim.fn.reg_executing() ~= "")
+
+   if (recording_macro or executing_macro) then
+      regular_backspace(cursor_pos, current_line)
+
+   elseif contains_only_whitespace(behind_cursor) then
       remove_whitespace(cursor_pos, current_line)
+
    else
-      -- normal backspace behaviour
+      -- normal vim backspace behaviour
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
    end
 end
