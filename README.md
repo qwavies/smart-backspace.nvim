@@ -4,7 +4,8 @@
 
 ## 🚀 Demo
 
-![Demo](https://i.imgur.com/TGxD8Em.gif)
+![Demo](https://github.com/user-attachments/assets/51fb3592-72cd-4fb7-93af-32f0e480365c)
+
 
 ## 📦 Installation
 
