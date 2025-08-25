@@ -4,7 +4,7 @@
 
 ## 🚀 Demo
 
-**Coming soon!**
+![Demo](assets/smart-backspace-showcase.gif)
 
 ## 📦 Installation
 
