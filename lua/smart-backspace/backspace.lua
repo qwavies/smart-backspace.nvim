@@ -1,7 +1,6 @@
 local M = {}
 
 local function regular_backspace(cursor_pos, current_line)
-   -- TODO: add functionality to remove by indent
    local row = cursor_pos[1]
    local col = cursor_pos[2]
 
@@ -85,18 +84,10 @@ function M.smart_backspace()
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
    local behind_cursor = current_line:sub(1, cursor_pos[2])
 
-   local recording_macro = (vim.fn.reg_recording() ~= "")
-   local executing_macro = (vim.fn.reg_executing() ~= "")
-
-   if (recording_macro or executing_macro) then
-      regular_backspace(cursor_pos, current_line)
-
-   elseif contains_only_whitespace(behind_cursor) then
+   if contains_only_whitespace(behind_cursor) then
       remove_whitespace(cursor_pos, current_line)
-
    else
-      -- normal vim backspace behaviour
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", true)
+      regular_backspace(cursor_pos, current_line)
    end
 end
 
