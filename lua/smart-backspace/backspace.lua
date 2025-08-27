@@ -1,5 +1,43 @@
 local M = {}
 
+local function contains_pair(cursor_pos, current_line)
+   local col = cursor_pos[2]
+
+   local code_pairs = {
+      { "(" , ")" },
+      { "[" , "]" },
+      { "{" , "}" },
+      { "<" , ">" },
+      { "\'" , "\'" },
+      { "\"" , "\"" },
+   }
+
+   if (col + 1 > #current_line) then
+      return false
+   end
+
+   local current_character = current_line:sub(col, col)
+   local next_character = current_line:sub(col + 1, col + 1) -- is known that its not the last character so always in bounds
+
+   for _, pair in pairs(code_pairs) do
+      local opening_pair = pair[1]
+      local closing_pair = pair[2]
+      if (current_character == opening_pair) and (next_character == closing_pair) then
+         return true
+      end
+   end
+   return false
+end
+
+local function remove_pair(cursor_pos, current_line)
+   local row = cursor_pos[1]
+   local col = cursor_pos[2]
+
+   local new_line = current_line:sub(1, col - 1) .. current_line:sub(col + 2)
+   vim.api.nvim_set_current_line(new_line)
+   vim.api.nvim_win_set_cursor(0, {row, col - 1})
+end
+
 local function regular_backspace(cursor_pos, current_line)
    local row = cursor_pos[1]
    local col = cursor_pos[2]
@@ -63,7 +101,7 @@ local function remove_whitespace(cursor_pos, current_line)
       -- edge case: line above is empty
       vim.api.nvim_buf_set_lines(0, row - 1, row, false, {}) -- simply remove above line
 
-   elseif (prev_line:sub(-1) == ";") and (count_whitepsace(current_line) > count_whitepsace(prev_line)) then
+   elseif (row > 0) and (prev_line:sub(-1) == ";") and (count_whitepsace(current_line) > count_whitepsace(prev_line)) then
       -- edge case: above prev_line ends (denoted with ;) and current_line is over-indented
       local prev_line_whitespace = prev_line:match("^(%s+)")
       vim.api.nvim_buf_set_lines(0, row, row + 1, false, {prev_line_whitespace .. after_cursor})
@@ -86,6 +124,10 @@ function M.smart_backspace()
 
    if contains_only_whitespace(behind_cursor) then
       remove_whitespace(cursor_pos, current_line)
+
+   elseif contains_pair(cursor_pos, current_line) then
+      remove_pair(cursor_pos, current_line)
+
    else
       regular_backspace(cursor_pos, current_line)
    end
