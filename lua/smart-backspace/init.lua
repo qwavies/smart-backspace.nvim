@@ -12,9 +12,6 @@ function M.setup(opts)
 
    vim.keymap.set("i", "<BS>", backspace.smart_backspace, { desc = "Smart backspace"})
    vim.keymap.set("i", "<C-BS>", backspace.regular_backspace, { desc = "Simple backspace"})
-   vim.keymap.set("n", "<leader>r", function()
-      vim.print(opts)
-   end, { desc = "Simple backspace"})
 end
 
 return M

@@ -10,6 +10,7 @@ local function contains_pair(cursor_pos, current_line)
       { "<" , ">" },
       { "\'" , "\'" },
       { "\"" , "\"" },
+      { "`" , "`" },
    }
 
    if (col + 1 > #current_line) then
@@ -123,7 +124,10 @@ function M.smart_backspace()
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
    local behind_cursor = current_line:sub(1, cursor_pos[2])
 
-   if contains_only_whitespace(behind_cursor) then
+   if vim.g.smart_backspace_toggled == false then
+      regular_backspace(cursor_pos, current_line)
+
+   elseif contains_only_whitespace(behind_cursor) then
       remove_whitespace(cursor_pos, current_line)
 
    elseif contains_pair(cursor_pos, current_line) then
