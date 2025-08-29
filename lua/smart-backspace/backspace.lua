@@ -103,6 +103,7 @@ local function remove_whitespace(cursor_pos, current_line)
 
    elseif (row > 0) and (prev_line:sub(-1) == ";") and (count_whitepsace(current_line) > count_whitepsace(prev_line)) then
       -- edge case: above prev_line ends (denoted with ;) and current_line is over-indented
+      -- TODO: check if replacing with for loop is better for 
       local prev_line_whitespace = prev_line:match("^(%s+)")
       vim.api.nvim_buf_set_lines(0, row, row + 1, false, {prev_line_whitespace .. after_cursor})
       vim.api.nvim_win_set_cursor(0, {row + 1, #prev_line_whitespace})
