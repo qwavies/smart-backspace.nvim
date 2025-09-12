@@ -10,9 +10,9 @@ function M.setup()
 
          if not config.get_config().silent then
             if vim.g.smart_backspace_toggled == true then
-               vim.print("Smart Backspace Enabled!")
+               vim.notify("Smart Backspace Enabled!")
             elseif vim.g.smart_backspace_toggled == false then
-               vim.print("Smart Backspace Disabled!")
+               vim.notify("Smart Backspace Disabled!")
             end
          end
       end,
