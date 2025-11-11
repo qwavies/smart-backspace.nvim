@@ -8,7 +8,7 @@ local function contains_pair(cursor_pos, current_line)
       { "[" , "]" },
       { "{" , "}" },
       { "<" , ">" },
-      { "\"" , "\"" },
+      { "\'" , "\'" },
       { "\"" , "\"" },
       { "`" , "`" },
    }
