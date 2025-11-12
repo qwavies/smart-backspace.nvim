@@ -39,7 +39,7 @@ Plug "qwavies/smart-backspace.nvim"
 
 ## ⚙  Configuration
 
-### Lazy Loading
+### 💤 Lazy Loading
 
 If you want to lazy load Smart Backspace, you could set a event condition.
 For example, if you use [lazy.nvim](https://lazy.folke.io):
@@ -51,7 +51,7 @@ For example, if you use [lazy.nvim](https://lazy.folke.io):
 }
 ```
 
-### Default configuration
+### 🧩 Default configuration
 
 Using [lazy.nvim](https://lazy.folke.io):
 
@@ -71,7 +71,7 @@ Using [lazy.nvim](https://lazy.folke.io):
 }
 ```
 
-### Toggling smart-backspace
+### ⚡ Toggling smart-backspace
 
 Using the `:SmartBackspaceToggle` command, smart-backspace can be toggled on/off.
 
