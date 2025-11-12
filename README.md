@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 
 ```lua
 {
-    "qwavies/smart-backspace.nvim",
+    "qwavies/smart-backspace.nvim"
 }
 ```
 
@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 
 ```lua
 use {
-    "qwavies/smart-backspace.nvim",
+    "qwavies/smart-backspace.nvim"
 }
 ```
 
@@ -47,7 +47,7 @@ For example, if you use [lazy.nvim](https://lazy.folke.io):
 ```lua
 {
     "qwavies/smart-backspace.nvim",
-    event = {"InsertEnter", "CmdlineEnter"},
+    event = {"InsertEnter", "CmdlineEnter"}
 }
 ```
 
