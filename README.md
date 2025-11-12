@@ -1,6 +1,6 @@
 <h1 align="center">✨ Smart Backspace for Neovim ✨</h1>
 
-<p align="center">Neovim plugin to save time removing indentation written in lua. Inspired by <a href="https://www.jetbrains.com/idea/">IntelliJ</a>'s backspace functionality.</p>
+<p align="center">Neovim plugin to save time removing indentation written in lua. Inspired by the JetBrains IDE <a href="https://www.jetbrains.com/idea/">IntelliJ</a>'s backspace functionality.</p>
 
 ## 🚀 Demo
 
@@ -20,7 +20,6 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 ```lua
 {
     "qwavies/smart-backspace.nvim",
-    event = "InsertEnter",
 }
 ```
 
@@ -29,7 +28,6 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 ```lua
 use {
     "qwavies/smart-backspace.nvim",
-    event = "InsertEnter",
 }
 ```
 
@@ -41,7 +39,47 @@ Plug "qwavies/smart-backspace.nvim"
 
 ## ⚙  Configuration
 
-**Coming soon!**
+### Lazy Loading
+
+If you want to lazy load Smart Backspace, you could set a event condition.
+For example, if you use [lazy.nvim](https://lazy.folke.io):
+
+```lua
+{
+    "qwavies/smart-backspace.nvim",
+    event = {"InsertEnter", "CmdlineEnter"},
+}
+```
+
+### Default configuration
+
+Using [lazy.nvim](https://lazy.folke.io):
+
+```lua
+{
+    "qwavies/smart-backspace.nvim",
+    opts = {
+        enabled = true, -- enables/disables smart-backspace
+        silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+        disabled_filetypes = { -- filetypes to automatically disable smart-backspace
+            "py",
+            "hs",
+            "md",
+            "txt",
+        }
+    }
+}
+```
+
+### Toggling smart-backspace
+
+Using the `:SmartBackspaceToggle` command, smart-backspace can be toggled on/off.
+
+If you want to set a keybind to toggle smart-backspace, you can implement the following into your neovim config:
+
+```lua
+vim.keymap.set("n", "<leader>bs", "<cmd>SmartBackspaceToggle<CR>", { desc = "Toggle Smart Backspace" })
+```
 
 ## 👨‍💻 Planned Changes/Additions
 
