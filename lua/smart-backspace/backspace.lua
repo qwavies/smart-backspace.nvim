@@ -10,7 +10,7 @@ local function delete_char_before_cursor_utf8(line, col)
    -- Convert byte index (0-indexed) to character index
    local char_idx = vim.str_utfindex(line, col)
 
-   if char_idx == 0 then
+   if (char_idx == 0) then
       return nil, nil
    end
 
@@ -162,8 +162,6 @@ local function regular_backspace(cursor_pos, current_line)
    local behind_cursor = current_line:sub(1, col)
    local after_cursor = current_line:sub(col + 1)
 
-
-   -- TODO: make regular backspace get rid of indents
    if (row == 1) and (col == 0) then
       -- if first character first line, do nothing
       return
@@ -199,30 +197,64 @@ local function remove_whitespace(cursor_pos, current_line)
    local row = cursor_pos[1]
    local col = cursor_pos[2]
    local after_cursor = current_line:sub(col + 1)
-
    local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
+   local prev_non_whitespace_line = ""
+   local prev_line_index = 1
+   local at_start_of_file = false
+
+   -- find the previous non-whitespace lines indentation
+   while true do
+      prev_non_whitespace_line = vim.api.nvim_buf_get_lines(0, row - prev_line_index - 1, row - prev_line_index, false)[1]
+
+      -- if you hit the start of the file, delete the whitespace behind the cursor
+      if (prev_non_whitespace_line == nil) then
+         at_start_of_file = true
+         break
+      end
+
+      if not contains_only_whitespace(prev_non_whitespace_line) then
+         break
+      end
+
+      prev_line_index = prev_line_index + 1
+   end
 
    if (row == 1) then
-      -- edge case: if on line 1, just delete from start to cursor
+      -- if on line 1, just delete from start to cursor
       vim.api.nvim_buf_set_lines(0, 0, 1, false, {after_cursor})
       vim.api.nvim_win_set_cursor(0, {1, 0})
 
-   elseif (row > 1) and (contains_only_whitespace(prev_line)) then
-      -- edge case: line above is empty
-      vim.api.nvim_buf_set_lines(0, row - 2, row - 1, false, {}) -- simply remove above line
+   elseif at_start_of_file then
+      -- if there is no previous non-whitespace line (at start of the file)
+      if (count_whitepsace(current_line) > 0) then
+         -- if the current line is indented, remove the current indentation
+         vim.api.nvim_buf_set_lines(0, row - 1, row, false, {after_cursor})
+         vim.api.nvim_win_set_cursor(0, {row, 0})
 
-   elseif (row > 1) and (prev_line:sub(-1) == ";") and (count_whitepsace(current_line) > count_whitepsace(prev_line)) then
-      -- edge case: above prev_line ends (denoted with ;) and current_line is over-indented
-      local prev_line_whitespace = prev_line:match("^(%s+)")
+      else
+         -- remove the line
+         vim.api.nvim_buf_set_lines(0, row - 2, row, false, {after_cursor})
+         vim.api.nvim_win_set_cursor(0, {row - 1, 0})
+      end
+
+   elseif (row > 1) and (count_whitepsace(current_line) > count_whitepsace(prev_non_whitespace_line)) and not contains_only_whitespace(current_line) then
+      -- unindent to the above line's current indentation
+      local prev_line_whitespace = prev_non_whitespace_line:match("^(%s+)") or ""
       vim.api.nvim_buf_set_lines(0, row - 1, row, false, {prev_line_whitespace .. after_cursor})
       vim.api.nvim_win_set_cursor(0, {row, #prev_line_whitespace})
 
+   elseif (row > 1) and contains_only_whitespace(prev_line) then
+      -- remove line above if empty
+      vim.api.nvim_buf_set_lines(0, row - 2, row - 1, false, {})
+
    elseif (row > 1) then
+      -- join the current line with the previous line
       local new_line = prev_line .. after_cursor
       vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line}) -- replace both lines w new_line
       vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line}) -- set cursor at end of previous line content
 
    else
+      -- should never be called, just a failsafe
       regular_backspace(cursor_pos, current_line)
    end
 end
