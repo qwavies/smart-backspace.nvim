@@ -298,6 +298,10 @@ end
 
 function M.smart_backspace()
    local current_line = vim.api.nvim_get_current_line()
+   if not current_line then
+      return
+   end
+   
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
    local behind_cursor = current_line:sub(1, cursor_pos[2])
 
@@ -307,7 +311,9 @@ function M.smart_backspace()
    elseif contains_only_whitespace(behind_cursor) then
       -- if the cursor is in the middle of the whitespace indentation,
       -- use the logic of the cursor being at the first non-whitespace character
-      cursor_pos = { cursor_pos[1], ((current_line:find("%S") or #current_line + 1) - 1) } -- replaces the column with first non-whitespace char
+      local first_non_ws = current_line:find("%S")
+      local col = first_non_ws and (first_non_ws - 1) or #current_line
+      cursor_pos = { cursor_pos[1], col } -- replaces the column with first non-whitespace char
       remove_whitespace(cursor_pos, current_line)
 
    elseif contains_pair(cursor_pos, current_line) then
