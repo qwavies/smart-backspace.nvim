@@ -298,10 +298,7 @@ end
 
 function M.smart_backspace()
    local current_line = vim.api.nvim_get_current_line()
-   if not current_line then
-      return
-   end
-   
+
    local cursor_pos = vim.api.nvim_win_get_cursor(0)
    local behind_cursor = current_line:sub(1, cursor_pos[2])
 
