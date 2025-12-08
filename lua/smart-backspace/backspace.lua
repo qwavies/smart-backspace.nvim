@@ -189,8 +189,8 @@ local function regular_backspace(cursor_pos, current_line)
       remove_pair(cursor_pos, current_line)
 
    elseif contains_only_whitespace(behind_cursor) then
-      local tabs_to_spaces_ratio = vim.api.nvim_get_option_value("tabstop", { buf = 0 })
-      local trimmed_whitespace = trim_whitespace(behind_cursor, tabs_to_spaces_ratio)
+      local indentation_level = vim.bo.shiftwidth
+      local trimmed_whitespace = trim_whitespace(behind_cursor, indentation_level)
       local trimmed_line = trimmed_whitespace .. after_cursor
       vim.api.nvim_buf_set_lines(0, row - 1, row, false, {trimmed_line})
       vim.api.nvim_win_set_cursor(0, {row, #trimmed_whitespace})
