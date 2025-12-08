@@ -16,7 +16,7 @@ function M.setup(opts)
    vim.defer_fn(function()
       local current_backspace_map = vim.fn.maparg("<BS>", 'i', false, true)
       if (current_backspace_map.callback ~= backspace.smart_backspace) then
-         vim.notify("WARNING: Your Smart-Backspace mapping has been overriden.\n\nCheck which file/plugin has overriden by running `:imap <BS>`", vim.log.levels.WARN)
+         vim.notify("WARNING: Your Smart-Backspace mapping has been overriden. Check which file/plugin has overriden by running `:imap <BS>`", vim.log.levels.WARN)
       end
    end, 500)
 end
