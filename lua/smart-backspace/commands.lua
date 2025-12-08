@@ -40,7 +40,7 @@ function M.setup()
          end
       end,
       {
-         desc = "Toggles smart-backspace. Optionally pass in true/false as an arguement to force a specific state",
+         desc = "Toggles smart-backspace. Optionally pass in on/off as an arguement to force a specific state",
          nargs = "*",
          complete = function()
             return { "on", "off" }
@@ -54,7 +54,7 @@ function M.setup()
       pattern = "*",
       desc = "Smart-Backspace autocommand to enable/disable on certain filetypes",
       callback = function()
-         if (config.get_config().enabled == false) then
+         if not vim.g.smart_backspace_toggled then
             return
          end
 
