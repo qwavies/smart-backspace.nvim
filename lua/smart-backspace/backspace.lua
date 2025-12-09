@@ -45,9 +45,7 @@ local function contains_pair(cursor_pos, current_line)
    local next_character = current_line:sub(col + 1, col + 1) -- is known that its not the last character so always in bounds
 
    for _, pair in pairs(code_pairs) do
-      local opening_pair = pair[1]
-      local closing_pair = pair[2]
-      if (current_character == opening_pair) and (next_character == closing_pair) then
+      if (current_character == pair[1]) and (next_character == pair[2]) then
          return true
       end
    end
@@ -167,6 +165,26 @@ local function trim_whitespace(whitespace_string, tab_width)
    return whitespace_string:sub(1, cut_pos)
 end
 
+local function within_empty_brackets(prev_line, current_line, next_line)
+   local prev_line_last_char = prev_line:match("(%S)%s*$")
+   local next_line_first_char = next_line:match("^%s*(%S)")
+
+   local code_pairs = {
+      { "(", ")" },
+      { "[", "]" },
+      { "{", "}" },
+      { "<", ">" },
+   }
+
+   for _, pair in pairs(code_pairs) do
+      if contains_only_whitespace(current_line) and (prev_line_last_char == pair[1]) and (next_line_first_char == pair[2]) then
+         return true
+      end
+   end
+
+   return false
+end
+
 local function regular_backspace(cursor_pos, current_line)
    local row = cursor_pos[1]
    local col = cursor_pos[2]
@@ -209,6 +227,7 @@ local function remove_whitespace(cursor_pos, current_line)
    local row = cursor_pos[1]
    local col = cursor_pos[2]
    local after_cursor = current_line:sub(col + 1)
+   local next_line = vim.api.nvim_buf_get_lines(0, row, row + 1, false)[1]
    local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
    local prev_non_whitespace_line = ""
 
@@ -249,6 +268,12 @@ local function remove_whitespace(cursor_pos, current_line)
          vim.api.nvim_buf_set_lines(0, row - 2, row, false, {after_cursor})
          vim.api.nvim_win_set_cursor(0, {row - 1, 0})
       end
+
+   elseif within_empty_brackets(prev_line, current_line, next_line) then
+      local prev_line_trimmed = prev_line:gsub("%s+$", "")
+      local next_line_trimmed = next_line:gsub("^%s+", "")
+      vim.api.nvim_buf_set_lines(0, row - 2, row + 1, false, {prev_line_trimmed .. next_line_trimmed})
+      vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line_trimmed})
 
    elseif is_opening_pair(prev_non_whitespace_line:match("(%S)%s*$")) or (current_line:match("%S") == ".") then
       -- sees if above line ends in a opeing pair of brackets OR current line starts with a "."
