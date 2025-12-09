@@ -166,6 +166,10 @@ local function trim_whitespace(whitespace_string, tab_width)
 end
 
 local function within_empty_brackets(prev_line, current_line, next_line)
+   if (prev_line == nil) or (next_line == nil) then
+      return false
+   end
+
    local prev_line_last_char = prev_line:match("(%S)%s*$")
    local next_line_first_char = next_line:match("^%s*(%S)")
 
