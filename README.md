@@ -99,4 +99,4 @@ Compare load times against some other plugins!
   - [x] Send warning when smart-backspace has been overriden by another file/plugin
 - [x] Using `<C-BS>` to use as a regular backspace
 - [x] User configuration for more flexibility (feel free to recommend me more configuration changes!)
-
+- [ ] Treesitter integration to distinguish between proper indentation and over-indentation
