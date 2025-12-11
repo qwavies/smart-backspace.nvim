@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 
 ```lua
 {
-    "qwavies/smart-backspace.nvim"
+  "qwavies/smart-backspace.nvim"
 }
 ```
 
@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 
 ```lua
 use {
-    "qwavies/smart-backspace.nvim"
+  "qwavies/smart-backspace.nvim"
 }
 ```
 
@@ -46,8 +46,8 @@ For example, if you use [lazy.nvim](https://lazy.folke.io):
 
 ```lua
 {
-    "qwavies/smart-backspace.nvim",
-    event = {"InsertEnter", "CmdlineEnter"}
+  "qwavies/smart-backspace.nvim",
+  event = {"InsertEnter", "CmdlineEnter"}
 }
 ```
 
@@ -57,17 +57,17 @@ Using [lazy.nvim](https://lazy.folke.io):
 
 ```lua
 {
-    "qwavies/smart-backspace.nvim",
-    opts = {
-        enabled = true, -- enables/disables smart-backspace
-        silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
-        disabled_filetypes = { -- filetypes to automatically disable smart-backspace
-            "py",
-            "hs",
-            "md",
-            "txt",
-        }
+  "qwavies/smart-backspace.nvim",
+  opts = {
+    enabled = true, -- enables/disables smart-backspace
+    silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+    disabled_filetypes = { -- filetypes to automatically disable smart-backspace
+      "py",
+      "hs",
+      "md",
+      "txt",
     }
+  }
 }
 ```
 
