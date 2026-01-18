@@ -2,6 +2,29 @@ local M = {}
 
 local config = require("smart-backspace.config")
 
+function M.check_if_filetype_disabled()
+  local disabled_filetypes = config.get_config().disabled_filetypes
+
+      if not vim.g.smart_backspace_enabled then
+        return
+      end
+
+      local extension = vim.fn.expand("%:e")
+      local is_disabled = false
+      for _, filetype in ipairs(disabled_filetypes) do
+        if (extension == filetype) then
+          is_disabled = true
+          break
+        end
+      end
+
+      if is_disabled then
+        vim.g.smart_backspace_toggled = false
+      else
+        vim.g.smart_backspace_toggled = true
+      end
+end
+
 function M.setup()
   vim.api.nvim_create_user_command(
     "SmartBackspaceToggle",
@@ -48,31 +71,11 @@ function M.setup()
     }
   )
 
-  local disabled_filetypes = config.get_config().disabled_filetypes
 
   vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*",
     desc = "Smart-Backspace autocommand to enable/disable on certain filetypes",
-    callback = function()
-      if not vim.g.smart_backspace_toggled then
-        return
-      end
-
-      local extension = vim.fn.expand("%:e")
-      local is_disabled = false
-      for _, filetype in ipairs(disabled_filetypes) do
-        if (extension == filetype) then
-          is_disabled = true
-          break
-        end
-      end
-
-      if is_disabled then
-        vim.g.smart_backspace_toggled = false
-      else
-        vim.g.smart_backspace_toggled = true
-      end
-    end
+    callback = M.check_if_filetype_disabled
   }
 )
 end

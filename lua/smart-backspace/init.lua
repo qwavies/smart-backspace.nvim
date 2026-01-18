@@ -13,6 +13,8 @@ function M.setup(opts)
   vim.keymap.set("i", "<BS>", backspace.smart_backspace, { desc = "Smart backspace"})
   vim.keymap.set("i", "<C-BS>", backspace.regular_backspace, { desc = "Simple backspace"})
 
+  commands.check_if_filetype_disabled()
+
   vim.defer_fn(function()
     local current_backspace_map = vim.fn.maparg("<BS>", 'i', false, true)
     if (current_backspace_map.callback ~= backspace.smart_backspace) then
