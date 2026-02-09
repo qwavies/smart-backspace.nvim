@@ -69,15 +69,14 @@ local function is_opening_pair(char)
   return false
 end
 
-local function remove_pair(cursor_pos, current_line)
+local function remove_pair(cursor_pos)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
-  local new_line = current_line:sub(1, col - 1) .. current_line:sub(col + 2)
-  vim.api.nvim_set_current_line(new_line)
+  vim.api.nvim_buf_set_text(0, row - 1, col - 1, row -1, col + 1, {""})
   vim.api.nvim_win_set_cursor(0, {row, col - 1})
 end
 
-local function remove_charater(cursor_pos, current_line)
+local function remove_character(cursor_pos, current_line)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
 
@@ -85,15 +84,14 @@ local function remove_charater(cursor_pos, current_line)
     -- delete character before cursor (UTF-8 safe)
     local new_line, new_col = delete_char_before_cursor_utf8(current_line, col)
     if new_line then
-      vim.api.nvim_set_current_line(new_line)
+      vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
       vim.api.nvim_win_set_cursor(0, {row, new_col})
     end
 
   elseif (row > 1) then
     -- at start of line, join with previous line
     local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
-    local new_line = prev_line .. current_line
-    vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line})
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, 0, {""})
     vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line})
   end
   -- edge case: on line 1 first character, do nothing
@@ -194,7 +192,6 @@ local function regular_backspace(cursor_pos, current_line)
   local col = cursor_pos[2]
 
   local behind_cursor = current_line:sub(1, col)
-  local after_cursor = current_line:sub(col + 1)
 
   if (row == 1) and (col == 0) then
     -- if first character first line, do nothing
@@ -203,25 +200,23 @@ local function regular_backspace(cursor_pos, current_line)
   elseif (col == 0) then
     -- if at start of the line, combine line with previous line
     local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
-    local new_line = prev_line .. current_line
-    vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line})
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, 0, {""})
     vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line})
 
   elseif contains_pair(cursor_pos, current_line) then
-    remove_pair(cursor_pos, current_line)
+    remove_pair(cursor_pos)
 
   elseif contains_only_whitespace(behind_cursor) then
     local indentation_level = vim.bo.shiftwidth
     local trimmed_whitespace = trim_whitespace(behind_cursor, indentation_level)
-    local trimmed_line = trimmed_whitespace .. after_cursor
-    vim.api.nvim_buf_set_lines(0, row - 1, row, false, {trimmed_line})
+    vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, col, {trimmed_whitespace})
     vim.api.nvim_win_set_cursor(0, {row, #trimmed_whitespace})
 
   else
     -- simply remove previous character (UTF-8 safe)
     local new_line, new_col = delete_char_before_cursor_utf8(current_line, col)
     if new_line then
-      vim.api.nvim_buf_set_lines(0, row - 1, row, false, {new_line})
+      vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
       vim.api.nvim_win_set_cursor(0, {row, new_col})
     end
   end
@@ -230,7 +225,6 @@ end
 local function remove_whitespace(cursor_pos, current_line)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
-  local after_cursor = current_line:sub(col + 1)
   local next_line = vim.api.nvim_buf_get_lines(0, row, row + 1, false)[1]
   local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, false)[1]
   local prev_non_whitespace_line = ""
@@ -257,27 +251,25 @@ local function remove_whitespace(cursor_pos, current_line)
 
   if (row == 1) then
     -- if on line 1, just delete from start to cursor
-    vim.api.nvim_buf_set_lines(0, 0, 1, false, {after_cursor})
+    vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, col, {""})
     vim.api.nvim_win_set_cursor(0, {1, 0})
 
   elseif at_start_of_file then
     -- if there is no previous non-whitespace line (at start of the file)
     if (count_whitepsace(current_line) > 0) then
       -- if the current line is indented, remove the current indentation
-      vim.api.nvim_buf_set_lines(0, row - 1, row, false, {after_cursor})
+      vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, col, {""})
       vim.api.nvim_win_set_cursor(0, {row, 0})
 
     else
       -- remove the line
-      vim.api.nvim_buf_set_lines(0, row - 2, row, false, {after_cursor})
+      vim.api.nvim_buf_set_text(0, row - 2, 0, row - 1, 0, {""})
       vim.api.nvim_win_set_cursor(0, {row - 1, 0})
     end
 
   elseif within_empty_brackets(prev_line, current_line, next_line) then
-    local prev_line_trimmed = prev_line:gsub("%s+$", "")
-    local next_line_trimmed = next_line:gsub("^%s+", "")
-    vim.api.nvim_buf_set_lines(0, row - 2, row + 1, false, {prev_line_trimmed .. next_line_trimmed})
-    vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line_trimmed})
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row, (next_line:find("%S") or 1) - 1, {""})
+    vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line:gsub("%s+$", "")})
 
   elseif is_opening_pair(prev_non_whitespace_line:match("(%S)%s*$")) or (current_line:match("%S") == ".") then
     -- sees if above line ends in a opeing pair of brackets OR current line starts with a "."
@@ -292,35 +284,33 @@ local function remove_whitespace(cursor_pos, current_line)
       local prev_line_whitespace = prev_non_whitespace_line:match("^(%s+)") or ""
       -- WARN: only ever adds spaces. Maybe allow to change to tabs in config?
       local correct_indentation = prev_line_whitespace .. string.rep(" ", single_indentation_level)
-      vim.api.nvim_buf_set_lines(0, row - 1, row, false, {correct_indentation .. after_cursor})
+      vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, col, {correct_indentation})
       vim.api.nvim_win_set_cursor(0, {row, #correct_indentation})
 
     elseif contains_only_whitespace(prev_line) then
-      vim.api.nvim_buf_set_lines(0, row - 2, row - 1, false, {})
+      vim.api.nvim_buf_set_text(0, row - 2, 0, row - 1, 0, {""})
       vim.api.nvim_win_set_cursor(0, {row - 1, col})
 
     else
       -- otherwise, join the current line with the previous line
-      local new_line = prev_line .. after_cursor
-      vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line}) -- replace both lines w new_line
+      vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, (current_line:find("%S") or 1) - 1, {""})
       vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line}) -- set cursor at end of previous line content
     end
 
   elseif (count_whitepsace(current_line) > count_whitepsace(prev_non_whitespace_line)) and not contains_only_whitespace(current_line) then
     -- unindent to the above (non-whitespace) line's current indentation
     local prev_line_whitespace = prev_non_whitespace_line:match("^(%s+)") or ""
-    vim.api.nvim_buf_set_lines(0, row - 1, row, false, {prev_line_whitespace .. after_cursor})
+    vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, (current_line:find("%S") or 1) - 1, {prev_line_whitespace})
     vim.api.nvim_win_set_cursor(0, {row, #prev_line_whitespace})
 
   elseif contains_only_whitespace(prev_line) then
     -- remove line above if empty
-    vim.api.nvim_buf_set_lines(0, row - 2, row - 1, false, {})
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, 0, {""})
     vim.api.nvim_win_set_cursor(0, {row - 1, col})
 
   else
     -- join the current line with the previous line
-    local new_line = prev_line .. after_cursor
-    vim.api.nvim_buf_set_lines(0, row - 2, row, false, {new_line}) -- replace both lines w new_line
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, (current_line:find("%S") or 1) - 1, {""})
     vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line}) -- set cursor at end of previous line content
   end
 end
@@ -343,10 +333,10 @@ function M.smart_backspace()
     remove_whitespace(cursor_pos, current_line)
 
   elseif contains_pair(cursor_pos, current_line) then
-    remove_pair(cursor_pos, current_line)
+    remove_pair(cursor_pos)
 
   else
-    remove_charater(cursor_pos, current_line)
+    remove_character(cursor_pos, current_line)
   end
 end
 
