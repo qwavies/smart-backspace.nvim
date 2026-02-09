@@ -1,27 +1,15 @@
 local M = {}
 
 -- UTF-8 safe helper function to delete the character before cursor
--- Returns: (new_line, new_col) or (nil, nil) if nothing to delete
-local function delete_char_before_cursor_utf8(line, col)
-  if col == 0 then
-    return nil, nil
-  end
-
+-- Returns: index of the character before the cursor column (int)
+local function find_char_before_cursor_utf8(line, col)
   -- Convert byte index (0-indexed) to character index
   local char_idx = vim.str_utfindex(line, col)
-
-  if (char_idx == 0) then
-    return nil, nil
-  end
 
   -- Get byte index of the previous character
   local prev_char_byte_idx = vim.str_byteindex(line, "utf-16", char_idx - 1)
 
-  -- Delete from prev_char_byte_idx to col (exclusive)
-  -- In Lua string.sub: keep [1, prev_char_byte_idx] and [col+1, end]
-  local new_line = line:sub(1, prev_char_byte_idx) .. line:sub(col + 1)
-
-  return new_line, prev_char_byte_idx
+  return prev_char_byte_idx
 end
 
 local function contains_pair(cursor_pos, current_line)
@@ -72,7 +60,7 @@ end
 local function remove_pair(cursor_pos)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
-  vim.api.nvim_buf_set_text(0, row - 1, col - 1, row -1, col + 1, {""})
+  vim.api.nvim_buf_set_text(0, row - 1, col - 1, row - 1, col + 1, {""})
   vim.api.nvim_win_set_cursor(0, {row, col - 1})
 end
 
@@ -82,11 +70,9 @@ local function remove_character(cursor_pos, current_line)
 
   if (col > 0) then
     -- delete character before cursor (UTF-8 safe)
-    local new_line, new_col = delete_char_before_cursor_utf8(current_line, col)
-    if new_line then
-      vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
-      vim.api.nvim_win_set_cursor(0, {row, new_col})
-    end
+    local new_col = find_char_before_cursor_utf8(current_line, col)
+    vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
+    vim.api.nvim_win_set_cursor(0, {row, new_col})
 
   elseif (row > 1) then
     -- at start of line, join with previous line
@@ -214,11 +200,9 @@ local function regular_backspace(cursor_pos, current_line)
 
   else
     -- simply remove previous character (UTF-8 safe)
-    local new_line, new_col = delete_char_before_cursor_utf8(current_line, col)
-    if new_line then
-      vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
-      vim.api.nvim_win_set_cursor(0, {row, new_col})
-    end
+    local new_col = find_char_before_cursor_utf8(current_line, col)
+    vim.api.nvim_buf_set_text(0, row - 1, new_col, row - 1, col, {""})
+    vim.api.nvim_win_set_cursor(0, {row, new_col})
   end
 end
 
