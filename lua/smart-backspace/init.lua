@@ -5,6 +5,8 @@ local backspace = require("smart-backspace.backspace")
 local config = require("smart-backspace.config")
 local commands = require("smart-backspace.commands")
 
+---The main setup function for smart-backspace.nvim
+---@param opts table the user's config
 function M.setup(opts)
   vim.g.smart_backspace_loaded = true
   config.setup(opts)

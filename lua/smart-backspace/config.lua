@@ -12,6 +12,8 @@ local config = {
   }
 }
 
+---Setup function to process configuration
+---@param opts table the user's config
 function M.setup(opts)
   config = vim.tbl_deep_extend("force", config, opts or {})
 
@@ -24,6 +26,8 @@ function M.setup(opts)
   end
 end
 
+---Returns the user's current config
+---@return table config the user's current config
 function M.get_config()
   return config
 end

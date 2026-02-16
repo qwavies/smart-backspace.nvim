@@ -2,6 +2,7 @@ local M = {}
 
 local config = require("smart-backspace.config")
 
+---Checks if the current buffer's filetype has been marked as disabled
 function M.check_if_filetype_disabled()
   local disabled_filetypes = config.get_config().disabled_filetypes
 
@@ -25,6 +26,7 @@ function M.check_if_filetype_disabled()
       end
 end
 
+---Setup function to create nvim commands and autocommands
 function M.setup()
   vim.api.nvim_create_user_command(
     "SmartBackspaceToggle",
