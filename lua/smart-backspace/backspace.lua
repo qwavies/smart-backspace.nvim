@@ -318,10 +318,10 @@ local function remove_whitespace(cursor_pos, current_line)
       vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line}) -- set cursor at end of previous line content
     end
 
-  elseif (count_leading_whitespace(current_line) > count_leading_whitespace(prev_non_whitespace_line)) and not contains_only_whitespace(current_line) then
+  elseif (count_leading_whitespace(current_line) > count_leading_whitespace(prev_non_whitespace_line)) then
     -- unindent to the above (non-whitespace) line's current indentation
     local prev_line_whitespace = prev_non_whitespace_line:match("^(%s+)") or ""
-    vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, (current_line:find("%S") or 1) - 1, {prev_line_whitespace})
+    vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, (current_line:find("%S") or #current_line + 1) - 1, {prev_line_whitespace})
     vim.api.nvim_win_set_cursor(0, {row, #prev_line_whitespace})
 
   elseif contains_only_whitespace(prev_line) then
