@@ -258,16 +258,12 @@ local function remove_whitespace(cursor_pos, current_line)
   local at_start_of_file = false
 
   -- find the previous non-whitespace lines indentation
-  while true do
+  while (not at_start_of_file) and (contains_only_whitespace(prev_non_whitespace_line)) do
     prev_non_whitespace_line = vim.api.nvim_buf_get_lines(0, row - prev_line_index - 1, row - prev_line_index, false)[1]
 
     -- if you hit the start of the file, set a flag to delete the whitespace behind the cursor
     if (prev_non_whitespace_line == nil) then
       at_start_of_file = true
-      break
-    end
-
-    if not contains_only_whitespace(prev_non_whitespace_line) then
       break
     end
 
