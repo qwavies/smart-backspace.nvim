@@ -331,7 +331,7 @@ local function remove_whitespace(cursor_pos, current_line)
 
   else
     -- join the current line with the previous line
-    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, (current_line:find("%S") or 1) - 1, {""})
+    vim.api.nvim_buf_set_text(0, row - 2, #prev_line, row - 1, (current_line:find("%S") or #current_line + 1) - 1, {""})
     vim.api.nvim_win_set_cursor(0, {row - 1, #prev_line}) -- set cursor at end of previous line content
   end
 end
