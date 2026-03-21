@@ -8,10 +8,10 @@ local function find_char_before_cursor_utf8(cursor_pos, current_line)
   local col = cursor_pos[2]
 
   -- Convert byte index (0-indexed) to character index
-  local char_idx = vim.str_utfindex(current_line, "utf-16", col)
+  local char_idx = vim.str_utfindex(current_line, "utf-32", col)
 
   -- Get byte index of the previous character
-  local prev_char_byte_idx = vim.str_byteindex(current_line, "utf-16", char_idx - 1)
+  local prev_char_byte_idx = vim.str_byteindex(current_line, "utf-32", char_idx - 1)
 
   return prev_char_byte_idx
 end
