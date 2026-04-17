@@ -13,7 +13,7 @@ local config = {
 }
 
 ---Setup function to process configuration
----@param opts table the user's config
+---@param opts? table the user's config
 function M.setup(opts)
   config = vim.tbl_deep_extend("force", config, opts or {})
 
