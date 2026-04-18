@@ -13,7 +13,17 @@ https://github.com/user-attachments/assets/395f18ee-1346-4ac2-8b5c-79597cffe995
 - Neovim `0.8.0+`
 
 > [!WARNING]
-> If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `opts`, ensure that `map_bs = false`.
+> If using with [nvim-autopairs](https://github.com/windwp/nvim-autopairs), in `require("nvim-autopairs").setup({})`, ensure that `map_bs = false`.
+
+### Using 📦 [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager):
+
+```lua
+vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
+require("smart-backspace").setup()
+```
+
+<details>
+<summary>Other Plugin Manager Instructions</summary>
 
 ### For 💤 [lazy.nvim](https://lazy.folke.io) users:
 
@@ -36,13 +46,27 @@ use {
 ```vim
 Plug "qwavies/smart-backspace.nvim"
 ```
+</details>
 
 ## ⚙  Configuration
 
 ### 💤 Lazy Loading
 
-If you want to lazy load Smart Backspace, you could set a event condition.
-For example, if you use [lazy.nvim](https://lazy.folke.io):
+If you want to lazy load Smart Backspace, you can create an autocmd with an event condition. For example, using 📦 [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager):
+
+```lua
+vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
+  once = true,
+  callback = function()
+    vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
+    require("smart-backspace").setup()
+  end
+})
+```
+<details>
+<summary>Other Plugin Manager Instructions</summary>
+
+### Using [lazy.nvim](https://lazy.folke.io):
 
 ```lua
 {
@@ -50,10 +74,31 @@ For example, if you use [lazy.nvim](https://lazy.folke.io):
   event = {"InsertEnter", "CmdlineEnter"}
 }
 ```
+</details>
 
 ### 🧩 Default configuration
 
-Using [lazy.nvim](https://lazy.folke.io):
+Using 📦 [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager):
+
+```lua
+vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
+require("smart-backspace").setup({
+  enabled = true, -- enables/disables smart-backspace
+  silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+  disabled_filetypes = { -- filetypes to automatically disable smart-backspace
+    "", -- no extension
+    "py",
+    "hs",
+    "md",
+    "txt",
+  }
+})
+```
+
+<details>
+<summary>Other Plugin Manager Instructions</summary>
+
+### Using [lazy.nvim](https://lazy.folke.io):
 
 ```lua
 {
@@ -71,6 +116,7 @@ Using [lazy.nvim](https://lazy.folke.io):
   }
 }
 ```
+</details>
 
 ### ⚡ Toggling smart-backspace
 
@@ -100,4 +146,3 @@ Compare load times against some other plugins!
   - [x] Send warning when smart-backspace has been overriden by another file/plugin
 - [x] Using `<C-BS>` to use as a regular backspace
 - [x] User configuration for more flexibility (feel free to recommend me more configuration changes!)
-- [ ] Treesitter integration to distinguish between proper indentation and over-indentation
