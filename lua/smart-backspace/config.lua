@@ -1,11 +1,11 @@
 local M = {}
 
---- @class SmartBackspaceConfig
+--- @class SmartBackspace.Config
 --- @field enabled? boolean Enables or disables smart-backspace. Defaults to `true`.
 --- @field silent? boolean If `false`, sends a notification when smart-backspace is toggled. Defaults to `true`.
 --- @field disabled_filetypes? string[] List of filetypes to automatically disable smart-backspace for. Defaults to `{ "", "py", "hs", "md", "txt" }`.
 
---- @type SmartBackspaceConfig
+--- @type SmartBackspace.Config
 local config = {
   enabled = true, -- enables/disables smart-backspace
   silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
@@ -19,7 +19,7 @@ local config = {
 }
 
 --- Setup function to process configuration
---- @param opts? SmartBackspaceConfig the user's config
+--- @param opts? SmartBackspace.Config the user's config
 function M.setup(opts)
   config = vim.tbl_deep_extend("force", config, opts or {})
 
@@ -33,7 +33,7 @@ function M.setup(opts)
 end
 
 --- Returns the user's current config
---- @return SmartBackspaceConfig config the user's current config
+--- @return SmartBackspace.Config config the user's current config
 function M.get_config()
   return config
 end
