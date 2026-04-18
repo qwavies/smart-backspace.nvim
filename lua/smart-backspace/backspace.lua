@@ -1,9 +1,9 @@
 local M = {}
 
----UTF-8 safe helper function to find the character before cursor
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
----@param current_line string contents of current line
----@return integer prev_char_byte_idx previous character utf8 index
+--- UTF-8 safe helper function to find the character before cursor
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- @param current_line string contents of current line
+--- @return integer prev_char_byte_idx previous character utf8 index
 local function find_char_before_cursor_utf8(cursor_pos, current_line)
   local col = cursor_pos[2]
 
@@ -16,10 +16,10 @@ local function find_char_before_cursor_utf8(cursor_pos, current_line)
   return prev_char_byte_idx
 end
 
----Checks if the current selected character and the character after is a pair. Eg: "()" or "{}"
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
----@param current_line string contents of current line
----@return boolean
+--- Checks if the current selected character and the character after is a pair. Eg: "()" or "{}"
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- @param current_line string contents of current line
+--- @return boolean
 local function contains_pair(cursor_pos, current_line)
   local col = cursor_pos[2]
 
@@ -48,9 +48,9 @@ local function contains_pair(cursor_pos, current_line)
   return false
 end
 
----Checks if a given char is the first part of a pair. Eg: "(" or "{"
----@param char string the character to check
----@return boolean
+--- Checks if a given char is the first part of a pair. Eg: "(" or "{"
+--- @param char string the character to check
+--- @return boolean
 local function is_opening_pair(char)
   local code_pairs = {
     "(",
@@ -68,9 +68,9 @@ local function is_opening_pair(char)
   return false
 end
 
----Removes the current and next character.
----Use to remove certain pairs. eg: "()" or "{}"
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- Removes the current and next character.
+--- Use to remove certain pairs. eg: "()" or "{}"
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
 local function remove_pair(cursor_pos)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
@@ -78,9 +78,9 @@ local function remove_pair(cursor_pos)
   vim.api.nvim_win_set_cursor(0, {row, col - 1})
 end
 
----Removes the currently selected character or join current line with previous line
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
----@param current_line string contents of current line current line with previous line
+--- Removes the currently selected character or join current line with previous line
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- @param current_line string contents of current line current line with previous line
 local function remove_character(cursor_pos, current_line)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
@@ -100,16 +100,16 @@ local function remove_character(cursor_pos, current_line)
   -- edge case: on line 1 first character, do nothing
 end
 
----Checks is a given string only contains whitespace (spaces, tabs)
----@param str string the string to check
----@return boolean
+--- Checks is a given string only contains whitespace (spaces, tabs)
+--- @param str string the string to check
+--- @return boolean
 local function contains_only_whitespace(str)
   return not str:find("%S")
 end
 
----Counts the amount of leading whitespace within a given string.
----@param str string the given string
----@return integer whitespace_count total amount of leading whitespace. Spaces += 1, tabs += nvim's "tabstop"
+--- Counts the amount of leading whitespace within a given string.
+--- @param str string the given string
+--- @return integer whitespace_count total amount of leading whitespace. Spaces += 1, tabs += nvim's "tabstop"
 local function count_leading_whitespace(str)
   local tabs_to_spaces_ratio = vim.api.nvim_get_option_value("tabstop", { buf = 0 })
   local whitespace_count = 0
@@ -128,13 +128,13 @@ local function count_leading_whitespace(str)
   return whitespace_count
 end
 
----Calculates the value of whitespace in `whitespace_string` and rounds it down to the nearest multiple of `tab_width`
----eg: trim_whitespace(string.rep(" ", 6), 3) -> "   "
----eg: trim_whitespace(string.rep(" ", 5), 3) -> "   "
----eg: trim_whitespace(string.rep(" ", 3), 3) -> ""
----@param whitespace_string string a string containing only whitespace
----@param tab_width integer the amount of indentation a tab is worth. Usually use vim.bo.tabstop
----@return string trimmed_whitespace a trimmed version of `whitespace_string`
+--- Calculates the value of whitespace in `whitespace_string` and rounds it down to the nearest multiple of `tab_width`
+--- eg: trim_whitespace(string.rep(" ", 6), 3) -> "   "
+--- eg: trim_whitespace(string.rep(" ", 5), 3) -> "   "
+--- eg: trim_whitespace(string.rep(" ", 3), 3) -> ""
+--- @param whitespace_string string a string containing only whitespace
+--- @param tab_width integer the amount of indentation a tab is worth. Usually use vim.bo.tabstop
+--- @return string trimmed_whitespace a trimmed version of `whitespace_string`
 local function trim_whitespace(whitespace_string, tab_width)
   -- get tab-adjusted size
   local total = 0
@@ -179,11 +179,11 @@ local function trim_whitespace(whitespace_string, tab_width)
   return whitespace_string:sub(1, cut_pos)
 end
 
---Checks if the previous and next non-whitespace characters are a pair of brackets
----@param prev_line string|nil contents of the previous line (nil if no previous line)
----@param current_line string contents of current line
----@param next_line string|nil contents of the next line (nil if no next line)
----@return boolean
+--- Checks if the previous and next non-whitespace characters are a pair of brackets
+--- @param prev_line string|nil contents of the previous line (nil if no previous line)
+--- @param current_line string contents of current line
+--- @param next_line string|nil contents of the next line (nil if no next line)
+--- @return boolean
 local function within_empty_brackets(prev_line, current_line, next_line)
   if (prev_line == nil) or (next_line == nil) then
     return false
@@ -208,9 +208,9 @@ local function within_empty_brackets(prev_line, current_line, next_line)
   return false
 end
 
----Emulates the default neovim backspace
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
----@param current_line string contents of current line
+--- Emulates the default neovim backspace
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- @param current_line string contents of current line
 local function regular_backspace(cursor_pos, current_line)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
@@ -244,9 +244,9 @@ local function regular_backspace(cursor_pos, current_line)
   end
 end
 
----Removes all indentation from behind the cursor
----@param cursor_pos table positions: [1] = row (int), [2] = col (int)
----@param current_line string contents of current line
+--- Removes all indentation from behind the cursor
+--- @param cursor_pos table positions: [1] = row (int), [2] = col (int)
+--- @param current_line string contents of current line
 local function remove_whitespace(cursor_pos, current_line)
   local row = cursor_pos[1]
   local col = cursor_pos[2]
@@ -362,7 +362,7 @@ function M.smart_backspace()
   end
 end
 
----Emulates the default neovim backspace
+--- Emulates the default neovim backspace
 function M.regular_backspace()
   local current_line = vim.api.nvim_get_current_line()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
