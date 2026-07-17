@@ -52,13 +52,14 @@ Plug "qwavies/smart-backspace.nvim"
 
 ### 💤 Lazy Loading
 
-If you want to lazy load Smart Backspace, you can create an autocmd with an event condition. For example, using 📦 [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager):
+If you want to lazy-load Smart Backspace, you can create an autocmd with an event condition. For example, using 📦 [vim.pack](https://neovim.io/doc/user/pack/#_plugin-manager):
 
 ```lua
+vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
+
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
-    vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
     require("smart-backspace").setup()
   end
 })
