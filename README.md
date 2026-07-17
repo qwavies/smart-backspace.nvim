@@ -85,6 +85,7 @@ vim.pack.add({"https://github.com/qwavies/smart-backspace.nvim"})
 require("smart-backspace").setup({
   enabled = true, -- enables/disables smart-backspace
   silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+  auto_keymap = true, -- determines if keymaps are assigned for you
   disabled_filetypes = { -- filetypes to automatically disable smart-backspace
     "", -- no extension
     "py",
@@ -106,6 +107,7 @@ require("smart-backspace").setup({
   opts = {
     enabled = true, -- enables/disables smart-backspace
     silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+    auto_keymap = true, -- determines if keymaps are assigned for you
     disabled_filetypes = { -- filetypes to automatically disable smart-backspace
       "", -- no extension
       "py",
@@ -128,6 +130,25 @@ If you want to set a keybind to toggle smart-backspace, you can implement the fo
 
 ```lua
 vim.keymap.set("n", "<leader>bs", "<cmd>SmartBackspaceToggle<CR>", { desc = "Toggle Smart Backspace" })
+```
+
+### 🎯 Setting your own keybinds
+
+Keymaps are by default assigned to your `<BS>` and `<C-BS>` keys.
+
+If you want more fine-grain control by opting out of the default keybinds, you can set turn `auto_keymap` off such as seen below:
+
+```lua
+require("smart-backspace").setup({
+  auto_keymap = false,
+})
+```
+
+Below are the following recommended keymaps that you can change to your own discretion:
+
+```lua
+vim.keymap.set("i", "<BS>", require("smart-backspace.backspace").smart_backspace, { desc = "Smart backspace" })
+vim.keymap.set("i", "<C-BS>", require("smart-backspace.backspace").regular_backspace, { desc = "Simple backspace" })
 ```
 
 ## 🥇 Load times

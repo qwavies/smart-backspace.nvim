@@ -3,12 +3,14 @@ local M = {}
 --- @class SmartBackspace.Config
 --- @field enabled? boolean Enables or disables smart-backspace. Defaults to `true`.
 --- @field silent? boolean If `false`, sends a notification when smart-backspace is toggled. Defaults to `true`.
+--- @field auto_keymap? boolean Determines whether keymaps are automatically set. Defaults to `true`.
 --- @field disabled_filetypes? string[] List of filetypes to automatically disable smart-backspace for. Defaults to `{ "", "py", "hs", "md", "txt" }`.
 
 --- @type SmartBackspace.Config
 local config = {
   enabled = true, -- enables/disables smart-backspace
   silent = true, -- if set to false, it will send a notification if smart-backspace is toggled
+  auto_keymap = true, -- determines if keymaps are assigned for you
   disabled_filetypes = { -- filetypes to automatically disable smart backspace
     "",
     "py",
